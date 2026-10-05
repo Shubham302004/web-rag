@@ -182,7 +182,7 @@ LANGFLOW_BASE=http://localhost:7860/api/v1/run
 
 # Flow IDs (from Langflow UI)
 LANGFLOW_CHAT_FLOW_ID=0aeb72b5-92c8-43a5-a342-a0d632407d06
-LANGFLOW_INGEST_FLOW_ID=Ingestion
+LANGFLOW_INGEST_FLOW_ID=d8870ffc-c5d1-4514-9a7f-c22b582e12a7
 
 # Component IDs (configure in Langflow)
 LANGFLOW_URL_COMPONENT_ID=URLComponent-QpqG8
@@ -213,6 +213,19 @@ langflow run
 ollama pull qwen3-embedding:0.6b
 ```
 
+**Import the flows:**
+Both pipelines are exported to [`flows/`](flows/) — no need to build them from scratch:
+
+1. Open Langflow → **Flows → Import** and load:
+   - `flows/INGESTION RAG PIPELINE.json`
+   - `flows/RETRIEVAL RAG PIPELINE.json`
+2. Copy each flow's **ID** (from the flow's share/settings menu) into `.env`:
+```env
+LANGFLOW_CHAT_FLOW_ID=<retrieval flow id>
+LANGFLOW_INGEST_FLOW_ID=<ingestion flow id>
+```
+3. Component IDs (`URLComponent-QpqG8`, `Agent-PICPQ`, Chroma IDs) are already baked into the exported flows — they only need to match `.env` if you rebuild the flows yourself.
+
 ---
 
 ## ⚙️ Configuration
@@ -224,7 +237,7 @@ ollama pull qwen3-embedding:0.6b
 | `LANGFLOW_API_KEY` | API key for Langflow authentication | `sk-NEkzRkorcQy7w...` |
 | `LANGFLOW_BASE` | Langflow server endpoint | `http://localhost:7860/api/v1/run` |
 | `LANGFLOW_CHAT_FLOW_ID` | ID of chat flow in Langflow | `0aeb72b5-92c8-43a5...` |
-| `LANGFLOW_INGEST_FLOW_ID` | ID of ingestion flow | `Ingestion` |
+| `LANGFLOW_INGEST_FLOW_ID` | ID of ingestion flow | `d8870ffc-c5d1-4514-9a7f-c22b582e12a7` |
 | `LANGFLOW_URL_COMPONENT_ID` | Component ID for URL input | `URLComponent-QpqG8` |
 | `LANGFLOW_AGENT_COMPONENT_ID` | Component ID for agent | `Agent-PICPQ` |
 | `LANGFLOW_CHROMA_INGEST_ID` | Chroma component for ingestion | `ext:chroma:...@official-hp8Mw` |
@@ -232,6 +245,8 @@ ollama pull qwen3-embedding:0.6b
 | `EMBEDDING_MODEL` | Display name for embedding model | `qwen3-embedding:0.6b (Ollama)` |
 
 ### Langflow Setup
+
+> **Shortcut:** import the ready-made flows from [`flows/`](flows/) instead of building them manually, then copy their IDs into `.env`.
 
 1. **Create Chat Flow:**
    - Input: Chat Input (message)
@@ -442,6 +457,9 @@ curl -X DELETE http://localhost:8000/sources/abc123
 ```
 web-rag/
 ├── main.py                 # FastAPI backend
+├── flows/                  # Exported Langflow pipelines (import these)
+│   ├── INGESTION RAG PIPELINE.json
+│   └── RETRIEVAL RAG PIPELINE.json
 ├── index.html              # Frontend UI
 ├── script.js               # JavaScript logic
 ├── style.css               # Styling
